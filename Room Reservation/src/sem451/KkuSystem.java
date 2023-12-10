@@ -1,6 +1,7 @@
 package sem451;
 import java.util.*;
 import java.time.*;
+import java.time.format.DateTimeParseException;
 import java.io.*;
 import java.text.SimpleDateFormat;
 
@@ -29,19 +30,57 @@ public class KkuSystem implements FileNames, ReserveTasks{
 			System.out.println("7. Create New User");
 			System.out.println("8. Print all users on screen");
 			System.out.println("9. Remove User");
+			System.out.println("10. Find Reserve Block by a user");
 			System.out.print("\nPlease Enter a number:");
 			s = sc.next();
 			switch(s) {
 			case "1":
 				System.out.println("Enter person name, id, age (press Enter after each):");
-				p = new Person(sc.next(),sc.next(),sc.nextInt());
+				String na = sc.next();
+				String id = sc.next();
+				int a=0;
+				try{
+					a = sc.nextInt();
+				while(a<=0) {
+					System.out.println("Enter a valid age :");
+					a = sc.nextInt();
+				}
+			}catch(InputMismatchException IME ) {
+				System.out.println("input must be a number!");
+			}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
+				p = new Person(na,id,a);
 				people.addPerson(p);
 				System.out.println("Enter room name:");
 				r = new LabRoom(sc.next());
 				System.out.println("Enter Date in yyyy-mm-dd:");
+				l=LocalDate.parse("2000-01-01"); // default Date
+				try {
 				l=LocalDate.parse(sc.next());
+				}
+				catch(DateTimeParseException DTPE) {
+					System.out.println("input Must be in the correct format !");
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
 				System.out.println("At what Clock 1-24 (Only 1 hour can be booked)?");
+				t=1; //default value
+				try {
 				t=sc.nextInt();
+				while(t<1 || t>24) {
+					System.out.println("Enter the correct Clock :");
+					t=sc.nextInt();
+				}
+				}
+				catch(InputMismatchException IMME) {
+					System.out.println("Input must be a number!");
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
 				st=this.reserveBlock(new ReserveBlock(p,l,t,r));
 				break;
 				
@@ -92,7 +131,11 @@ public class KkuSystem implements FileNames, ReserveTasks{
 				System.out.println("Enter user id to remove:");
 				people.removePerson(sc.next());
 				break;
-			
+			case "10":
+				System.out.println("Enter person name, id, age (press Enter after each):");
+				Person ps = new Person(sc.next() , sc.next() , sc.nextInt());
+				System.out.println(findReservedBlocksBy(ps));
+				break;
 			default:
 				System.err.println("Wrong choice!\n");
 				
@@ -331,5 +374,16 @@ public class KkuSystem implements FileNames, ReserveTasks{
 			e.printStackTrace();
 		}
 	}
-
-}
+	@Override
+	public List<ReserveBlock> findReservedBlocksBy(Person p) {
+		List<ReserveBlock> reservedBlocks= new ArrayList<>();
+		for(int i = 0 ; i<reservations.size(); i++) {
+			if(p.name().equals(reservations.get(i).by.name()))
+				if(p.getId().equals(reservations.get(i).by.getId()))
+					if(p.getAge()==reservations.get(i).by.getAge())
+						reservedBlocks.add(reservations.get(i));
+		}return reservedBlocks;
+	
+	
+	}
+	}

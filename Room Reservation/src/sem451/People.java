@@ -72,10 +72,10 @@ public class People implements FileNames, DataTasks{
 		people.clear();
 		ObjectInputStream o;
 		o = new ObjectInputStream(new FileInputStream(PEOPLE_FILE));
-		o.close();
 		people=(Map<String,Person>) o.readObject();
 		System.out.println("Finished Loading people data.");
 		System.out.println(people.size()+" user(s) imported.");
+		o.close();
 	}
 
 	@Override

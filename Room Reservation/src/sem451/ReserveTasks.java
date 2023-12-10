@@ -12,5 +12,5 @@ public interface ReserveTasks {
 
 	boolean loadDataFromFile();
 	boolean saveDataToFile();
-	
+	List<ReserveBlock> findReservedBlocksBy(Person p);
 }

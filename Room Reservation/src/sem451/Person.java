@@ -7,7 +7,6 @@ public class Person  implements Serializable{
 	String id;
 	int age;
 	boolean blocked;
-	
 	public Person(String name, String id, int age) {
 		this.setId(id);
 		this.rename(name);
@@ -44,6 +43,7 @@ public class Person  implements Serializable{
 	public void setBlocked(boolean blocked) {
 	this.blocked = blocked;
 	}
+     
 
 
 }
